@@ -147,7 +147,7 @@
         .thinking-container {
             align-self: flex-start;
             /* min-width: 20px; */
-            min-height: 140px;
+            /* min-height: 140px; */
             background-color: #f8f9fa;
             border: 1px solid #e9ecef;
             border-radius: 8px;
@@ -157,6 +157,11 @@
             /* overflow-y: auto; */
         }
         
+
+        .thinking-container.collapsed {
+            min-height: none;
+        }
+
         .thinking-header {
             padding: 10px 15px;
             display: flex;
@@ -183,8 +188,6 @@
             font-size: 0.95em;
             line-height: 1.5;
             white-space: pre-wrap;
-            /* min-width: 20px;
-            min-height: 100px; */
         }
         
         .thinking-content.collapsed {
@@ -594,9 +597,11 @@
         // 添加思考区域
         function addThinking(content, isStreaming) {
             // 移除之前的思考区域（如果有）
-            if (currentThinkingContainer) {
-                currentThinkingContainer.remove();
-            }
+            // if (currentThinkingContainer) {
+            //     currentThinkingContainer.id='';
+            //     //目前不符合预期，待修改
+            //     // currentThinkingContainer.remove();
+            // }
             
             currentThinkingContainer = document.createElement('div');
             currentThinkingContainer.className = 'thinking-container';
@@ -637,19 +642,15 @@
             
             // 滚动到底部
             scrollToBottom();
-            
             return currentThinkingContainer;
         }
         
         // 更新思考区域内容
         function updateThinking(content, isStreaming) {
             let thinkingContainer = document.getElementById('current-thinking-container');
-            
-            if (!thinkingContainer) {
-                thinkingContainer = addThinking(content, isStreaming);
-                return;
-            }
-            
+            if(thinkingContainer==null){
+              addThinking(content,isStreaming)
+             }
             const thinkingContent = thinkingContainer.querySelector('.thinking-content');
             thinkingContent.textContent = content;
             
@@ -761,6 +762,7 @@
                                     isInThinkingSection = false;
                                     // 确保思考区域显示
                                     updateThinking(thinkingContent, true);
+                                    currentThinkingContainer.id='';//reset current的id，防止覆盖
                                     continue;
                                 }
                                 
@@ -792,13 +794,13 @@
                                 // 保存到存储
                                 saveChatsToStorage();
                                 
-                                // 确保思考区域保留
-                                if (thinkingContent && thinkingContent.trim() !== '') {
-                                    updateThinking(thinkingContent, false);
-                                }
+                                // // 确保思考区域保留
+                                // if (thinkingContent && thinkingContent.trim() !== '') {
+                                //     updateThinking(thinkingContent, false);
+                                // }
                                 
-                                // 重置当前思考区域引用，以便下次使用新的思考区域
-                                currentThinkingContainer = null;
+                                // // 重置当前思考区域引用，以便下次使用新的思考区域
+                                // currentThinkingContainer = null;
                             }
                         } catch (e) {
                             console.error('解析JSON出错:', e, '原始数据:', line);
