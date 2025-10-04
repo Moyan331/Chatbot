@@ -545,6 +545,7 @@
                     // 如果有思考内容，先添加思考区域
                     if (message.thinking && message.thinking.trim() !== '') {
                         addThinking(message.thinking, false);
+                        currentThinkingContainer.id="past-thinking-container";
                     }
                     // 添加回答内容
                     addMessage(message.content, 'assistant');
@@ -700,7 +701,7 @@
                     ],
                     stream: true
                 };
-                
+                // scroll=true;
                 // 创建AI消息元素
                 currentAiMessageElement = document.createElement('div');
                 currentAiMessageElement.className = 'message ai-message';
@@ -714,7 +715,6 @@
                 
                 // 滚动到底部
                 scrollToBottom();
-                
                 // 发送请求并处理流式响应
                 const response = await fetch(API_URL, {
                     method: 'POST',
@@ -734,7 +734,7 @@
                 let aiResponse = '';
                 let thinkingContent = '';
                 let isInThinkingSection = false;
-                
+               
                 while (true) {
                     const { done, value } = await reader.read();
                     if (done) break;
@@ -764,7 +764,9 @@
                                     isInThinkingSection = false;
                                     // 确保思考区域显示
                                     //updateThinking(thinkingContent, true);
-                                    currentThinkingContainer.id='';//reset current的id，防止覆盖
+                                    if(currentThinkingContainer!=null)
+                                    currentThinkingContainer.id="past-thinking-container";//reset current的id，防止覆盖
+                                    scroll=true;
                                     continue;
                                 }
                                 
@@ -854,11 +856,7 @@
                 // 向上滚动
                 wheelDirection = '向上 ↑';
                 scroll=false;
-            } else {
-                // 向下滚动
-                wheelDirection = '向下 ↓';
-                scroll=true
-            }
+            } 
         });
         
 
