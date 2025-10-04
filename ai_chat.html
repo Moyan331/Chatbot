@@ -429,6 +429,7 @@
         let currentChatId = null;
         let currentThinkingContainer = null;
         let currentAiMessageElement = null;
+        let scroll=true;
         
         // 初始化
         function init() {
@@ -779,7 +780,7 @@
                                 }
                                 
                                 // 滚动到底部
-                                //scrollToBottom();
+                                if(scroll) scrollToBottom();
                             }
                             
                             if (data.done) {
@@ -846,6 +847,21 @@
             scrollToBottom();
         }
         
+         // 监听鼠标滚轮事件
+         document.addEventListener('wheel', function(event) {
+            // 判断滚动方向
+            if (event.deltaY < 0) {
+                // 向上滚动
+                wheelDirection = '向上 ↑';
+                scroll=false;
+            } else {
+                // 向下滚动
+                wheelDirection = '向下 ↓';
+                scroll=true
+            }
+        });
+        
+
         // 滚动到底部
         function scrollToBottom() {
             chatContainer.scrollTop = chatContainer.scrollHeight;
